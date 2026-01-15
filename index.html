@@ -1,930 +1,945 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-    <script defer src="/_vercel/insights/script.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #FAFAF9;
-            color: #1C1917;
-            overflow-x: hidden;
-        }
-        
-        h1, h2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 300;
-        }
-        
-        /* Gradient Orbs */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .orb-1 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,107,157,0.15) 0%, transparent 70%);
-            top: -250px;
-            left: -250px;
-        }
-        
-        .orb-2 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(78,205,196,0.12) 0%, transparent 70%);
-            bottom: -200px;
-            right: -200px;
-        }
-        
-        .orb-3 {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(254,193,99,0.1) 0%, transparent 70%);
-            top: 50%;
-            right: -100px;
-        }
-        
-        /* Animated Blobs */
-        .blob {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.08;
-            pointer-events: none;
-            z-index: 0;
-            animation: blobFloat 25s ease-in-out infinite;
-        }
-        
-        .blob-bocchi {
-            width: 300px;
-            height: 300px;
-            background: #FF6B9D;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-        
-        .blob-ryo {
-            width: 250px;
-            height: 250px;
-            background: #4FC3F7;
-            bottom: 30%;
-            right: 15%;
-            animation-delay: 5s;
-        }
-        
-        .blob-nijika {
-            width: 280px;
-            height: 280px;
-            background: #FEC163;
-            top: 60%;
-            left: 70%;
-            animation-delay: 10s;
-        }
-        
-        .blob-kita {
-            width: 260px;
-            height: 260px;
-            background: #FF5252;
-            top: 40%;
-            left: 40%;
-            animation-delay: 15s;
-        }
-        
-        @keyframes blobFloat {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            25% {
-                transform: translate(100px, -50px) scale(1.1);
-            }
-            50% {
-                transform: translate(-50px, 100px) scale(0.9);
-            }
-            75% {
-                transform: translate(80px, 80px) scale(1.05);
-            }
-        }
-        
-        /* Cursor Trail */
-        .cursor-trail {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: #FF6B9D;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        /* Smooth Reveal */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        /* Custom Underline */
-        .underline-effect {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .underline-effect::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: #FF6B9D;
-            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        .underline-effect:hover::after {
-            width: 100%;
-        }
-        
-        /* Card Hover */
-        .project-card {
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        .project-card:hover {
-            transform: translateY(-8px);
-        }
-        
-        .project-card:hover .project-image {
-            transform: scale(1.05);
-        }
-        
-        .project-image {
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        /* Minimal Button */
-        .btn-minimal {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-minimal::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,107,157,0.1);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        .btn-minimal:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        /* Profile Photo Tilt */
-        .profile-photo-container {
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-        }
-        
-        .profile-photo-wrapper {
-            transform-style: preserve-3d;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        .profile-border {
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        /* Contact Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 9998;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-        
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .modal-card {
-            background: white;
-            border-radius: 8px;
-            padding: 48px;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-        
-        .modal-overlay.active .modal-card {
-            transform: scale(1) translateY(0);
-        }
-        
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 32px;
-            height: 32px;
-            border: 1px solid #e7e5e4;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: white;
-        }
-        
-        .modal-close:hover {
-            border-color: #FF6B9D;
-            transform: rotate(90deg);
-        }
-    </style>
-</head>
-<body>
-    
-    <!-- Orbs -->
-    <div class="orb orb-1" id="orb1"></div>
-    <div class="orb orb-2" id="orb2"></div>
-    <div class="orb orb-3" id="orb3"></div>
-    
-    <!-- Animated Blobs -->
-    <div class="blob blob-bocchi"></div>
-    <div class="blob blob-ryo"></div>
-    <div class="blob blob-nijika"></div>
-    <div class="blob blob-kita"></div>
-    
-    <!-- Cursor Trail -->
-    <div class="cursor-trail" id="cursorTrail"></div>
-    
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 px-8 py-6 mix-blend-difference">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="text-white text-sm tracking-widest font-light">PORTFOLIO</div>
-            <div class="flex gap-8">
-                <a href="#about" class="text-white text-sm tracking-wide underline-effect font-light">About</a>
-                <a href="#contact" class="text-white text-sm tracking-wide underline-effect font-light">Contact</a>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Hero -->
-    <section class="min-h-screen flex items-center justify-center px-8">
-        <div class="max-w-5xl w-full">
-            <div class="reveal" style="transition-delay: 0.2s">
-                <p class="text-sm tracking-widest text-stone-500 mb-8">My Portfolio</p>
-            </div>
-            <div class="reveal" style="transition-delay: 0.4s">
-                <h1 class="text-7xl md:text-9xl leading-none mb-12 tracking-tight">
-                    Welcome<br/>Visitors
-                </h1>
-            </div>
-            <div class="reveal" style="transition-delay: 0.6s">
-                <p class="text-lg text-stone-600 max-w-xl leading-relaxed font-light">
-                    Here, You'll be seeing my successfully projects, my passions, and others.
-                </p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Selected Work -->
-    <section class="py-32 px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="reveal mb-20">
-                <p class="text-sm tracking-widest text-stone-500">MY WORKS</p>
-            </div>
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Portfolio</title>
+        <script defer src="/_vercel/insights/script.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
             
-            <div class="space-y-32">
-                <!-- Project 1 -->
-                <div class="reveal project-card cursor-pointer">
-                    <div class="grid md:grid-cols-2 gap-16 items-center">
-                        <div class="order-2 md:order-1">
-                            <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Stasiun BNI City</h2>
-                            <p class="text-stone-600 mb-8 leading-relaxed font-light">
-                                A view of Stasiun BNI City, Central Jakarta
-                            </p>
-                            <div class="flex gap-4 text-xs tracking-wider text-stone-500">
-                                <span>ANGLES</span>
-                                <span>PHOTOGRAPHY</span>
-                                <span>AFTERNOON</span>
-                            </div>
-                        </div>
-                        <div class="order-1 md:order-2 overflow-hidden rounded-sm">
-                            <img src="download (20).jpg" alt="Zenith Studio" class="project-image aspect-[4/3] w-full h-full object-cover">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Project 2 -->
-                <div class="reveal project-card cursor-pointer">
-                    <div class="grid md:grid-cols-2 gap-16 items-center">
-                        <div class="overflow-hidden rounded-sm">
-                            <img src="★.jpg" alt="Aurelia Atelier" class="project-image aspect-[4/3] w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Pantai Indah Kapuk 2</h2>
-                            <p class="text-stone-600 mb-8 leading-relaxed font-light">
-                                A view of Pantai Indah Kapuk 2, North Jakarta
-                            </p>
-                            <div class="flex gap-4 text-xs tracking-wider text-stone-500">
-                                <span>STRATEGY</span>
-                                <span>CITY SCENERY</span>
-                                <span>PHOTOGRAPHY</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Project 3 -->
-                <div class="reveal project-card cursor-pointer">
-                    <div class="grid md:grid-cols-2 gap-16 items-center">
-                        <div class="order-2 md:order-1">
-                            <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Autograph Tower</h2>
-                            <p class="text-stone-600 mb-8 leading-relaxed font-light">
-                                A view of Autograph Tower.. Kinda similiar with Citadel tower from HL2 heh..
-                            <div class="flex gap-4 text-xs tracking-wider text-stone-500">
-                                <span>SCENERY</span>
-                                <span>TOWER</span>
-                                <span>MOODS</span>
-                            </div>
-                        </div>
-                        <div class="order-1 md:order-2 overflow-hidden rounded-sm">
-                            <img src="download (13).jpg" alt="Lumina Space" class="project-image aspect-[4/3] w-full h-full object-cover">
-                        </div>
-                    </div>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: 'Inter', sans-serif;
+                background: #FAFAF9;
+                color: #1C1917;
+                overflow-x: hidden;
+            }
+            
+            h1, h2 {
+                font-family: 'Cormorant Garamond', serif;
+                font-weight: 300;
+            }
+            
+            /* Gradient Orbs */
+            .orb {
+                position: fixed;
+                border-radius: 50%;
+                filter: blur(120px);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .orb-1 {
+                width: 500px;
+                height: 500px;
+                background: radial-gradient(circle, rgba(255,107,157,0.15) 0%, transparent 70%);
+                top: -250px;
+                left: -250px;
+            }
+            
+            .orb-2 {
+                width: 400px;
+                height: 400px;
+                background: radial-gradient(circle, rgba(78,205,196,0.12) 0%, transparent 70%);
+                bottom: -200px;
+                right: -200px;
+            }
+            
+            .orb-3 {
+                width: 450px;
+                height: 450px;
+                background: radial-gradient(circle, rgba(254,193,99,0.1) 0%, transparent 70%);
+                top: 50%;
+                right: -100px;
+            }
+            
+            /* Animated Blobs */
+            .blob {
+                position: fixed;
+                border-radius: 50%;
+                filter: blur(80px);
+                opacity: 0.08;
+                pointer-events: none;
+                z-index: 0;
+                animation: blobFloat 25s ease-in-out infinite;
+            }
+            
+            .blob-bocchi {
+                width: 300px;
+                height: 300px;
+                background: #FF6B9D;
+                top: 20%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+            
+            .blob-ryo {
+                width: 250px;
+                height: 250px;
+                background: #4FC3F7;
+                bottom: 30%;
+                right: 15%;
+                animation-delay: 5s;
+            }
+            
+            .blob-nijika {
+                width: 280px;
+                height: 280px;
+                background: #FEC163;
+                top: 60%;
+                left: 70%;
+                animation-delay: 10s;
+            }
+            
+            .blob-kita {
+                width: 260px;
+                height: 260px;
+                background: #FF5252;
+                top: 40%;
+                left: 40%;
+                animation-delay: 15s;
+            }
+            
+            @keyframes blobFloat {
+                0%, 100% {
+                    transform: translate(0, 0) scale(1);
+                }
+                25% {
+                    transform: translate(100px, -50px) scale(1.1);
+                }
+                50% {
+                    transform: translate(-50px, 100px) scale(0.9);
+                }
+                75% {
+                    transform: translate(80px, 80px) scale(1.05);
+                }
+            }
+            
+            /* Cursor Trail */
+            .cursor-trail {
+                position: fixed;
+                width: 8px;
+                height: 8px;
+                background: #FF6B9D;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            /* Smooth Reveal */
+            .reveal {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+                transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            
+            /* Custom Underline */
+            .underline-effect {
+                position: relative;
+                display: inline-block;
+            }
+            
+            .underline-effect::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 1px;
+                background: #FF6B9D;
+                transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            
+            .underline-effect:hover::after {
+                width: 100%;
+            }
+            
+            /* Card Hover */
+            .project-card {
+                transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            
+            .project-card:hover {
+                transform: translateY(-8px);
+            }
+            
+            .project-card:hover .project-image {
+                transform: scale(1.05);
+            }
+            
+            .project-image {
+                transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            
+            /* Minimal Button */
+            .btn-minimal {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .btn-minimal::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border-radius: 50%;
+                background: rgba(255,107,157,0.1);
+                transform: translate(-50%, -50%);
+                transition: width 0.6s, height 0.6s;
+            }
+            
+            .btn-minimal:hover::before {
+                width: 300px;
+                height: 300px;
+            }
+            
+            /* Profile Photo Tilt */
+            .profile-photo-container {
+                transform-style: preserve-3d;
+                transition: transform 0.1s ease-out;
+            }
+            
+            .profile-photo-wrapper {
+                transform-style: preserve-3d;
+                transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            
+            .profile-border {
+                transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            
+            /* Contact Modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(10px);
+                z-index: 9998;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.4s ease;
+            }
+            
+            .modal-overlay.active {
+                opacity: 1;
+                pointer-events: all;
+            }
+            
+            .modal-card {
+                background: white;
+                border-radius: 8px;
+                padding: 48px;
+                max-width: 500px;
+                width: 90%;
+                position: relative;
+                transform: scale(0.9) translateY(20px);
+                transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            }
+            
+            .modal-overlay.active .modal-card {
+                transform: scale(1) translateY(0);
+            }
+            
+            .modal-close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                width: 32px;
+                height: 32px;
+                border: 1px solid #e7e5e4;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                background: white;
+            }
+            
+            .modal-close:hover {
+                border-color: #FF6B9D;
+                transform: rotate(90deg);
+            }
+        </style>
+    </head>
+    <body>
+        
+        <!-- Orbs -->
+        <div class="orb orb-1" id="orb1"></div>
+        <div class="orb orb-2" id="orb2"></div>
+        <div class="orb orb-3" id="orb3"></div>
+        
+        <!-- Animated Blobs -->
+        <div class="blob blob-bocchi"></div>
+        <div class="blob blob-ryo"></div>
+        <div class="blob blob-nijika"></div>
+        <div class="blob blob-kita"></div>
+        
+        <!-- Cursor Trail -->
+        <div class="cursor-trail" id="cursorTrail"></div>
+        
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full z-50 px-8 py-6 mix-blend-difference">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="text-white text-sm tracking-widest font-light">PORTFOLIO</div>
+                <div class="flex gap-8">
+                    <a href="#about" class="text-white text-sm tracking-wide underline-effect font-light">About</a>
+                    <a href="#contact" class="text-white text-sm tracking-wide underline-effect font-light">Contact</a>
                 </div>
             </div>
-        </div>
-    </section>
-    
-    <!-- Profile Section -->
-    <section id="about" class="py-32 px-8 bg-stone-50">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid md:grid-cols-5 gap-16 items-center">
-                <div class="md:col-span-2 reveal">
-                    <div class="relative profile-photo-container">
-                        <div class="aspect-[3/4] overflow-hidden rounded-sm profile-photo-wrapper">
-                            <img src="agemasen.jpg" alt="Profile Photo" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 profile-photo">
-                        </div>
-                        <div class="absolute -bottom-4 -right-4 w-32 h-32 border border-stone-300 rounded-sm -z-10 profile-border"></div>
-                    </div>
+        </nav>
+        
+        <!-- Hero -->
+        <section class="min-h-screen flex items-center justify-center px-8">
+            <div class="max-w-5xl w-full">
+                <div class="reveal" style="transition-delay: 0.2s">
+                    <p class="text-sm tracking-widest text-stone-500 mb-8">My Portfolio</p>
+                </div>
+                <div class="reveal" style="transition-delay: 0.4s">
+                    <h1 class="text-7xl md:text-9xl leading-none mb-12 tracking-tight">
+                        Welcome<br/>Visitors
+                    </h1>
+                </div>
+                <div class="reveal" style="transition-delay: 0.6s">
+                    <p class="text-lg text-stone-600 max-w-xl leading-relaxed font-light">
+                        Here, You'll be seeing my successfully projects, my passions, and others.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Selected Work -->
+        <section class="py-32 px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="reveal mb-20">
+                    <p class="text-sm tracking-widest text-stone-500">MY WORKS</p>
                 </div>
                 
-                <div class="md:col-span-3 space-y-8">
-                    <div class="reveal" style="transition-delay: 0.2s">
-                        <p class="text-sm tracking-widest text-stone-500 mb-6">ABOUT ME</p>
-                        <h2 class="text-5xl md:text-6xl mb-8 leading-tight">Larrei Kebayor<br/>Creativity is Everything</h2>
+                <div class="space-y-32">
+                    <!-- Project 1 -->
+                    <div class="reveal project-card cursor-pointer">
+                        <div class="grid md:grid-cols-2 gap-16 items-center">
+                            <div class="order-2 md:order-1">
+                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Stasiun BNI City</h2>
+                                <p class="text-stone-600 mb-8 leading-relaxed font-light">
+                                    A view of Stasiun BNI City, Central Jakarta
+                                </p>
+                                <div class="flex gap-4 text-xs tracking-wider text-stone-500">
+                                    <span>ANGLES</span>
+                                    <span>PHOTOGRAPHY</span>
+                                    <span>AFTERNOON</span>
+                                </div>
+                            </div>
+                            <div class="order-1 md:order-2 overflow-hidden rounded-sm">
+                                <img src="download (20).jpg" alt="Zenith Studio" class="project-image aspect-[4/3] w-full h-full object-cover">
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="reveal space-y-6 text-stone-600 leading-relaxed font-light" style="transition-delay: 0.4s">
-                        <p>Hello, Some of you may know me or.. Are you..? Well anyways, I'm Larrei or you can call me as "Rei". I'm living somewhere on Jakarta. I can do some photography, designing (maybe), and coding a little bit</p>
-                        <p>I also likes to play some story pixel games! Because.. Through that, I can learn some lessons or maybe some advices.</p>
-                        <p>2026 Might gonna be my year.. Hope I can get it through with some multiples or different situations..!</p>
+                    <!-- Project 2 -->
+                    <div class="reveal project-card cursor-pointer">
+                        <div class="grid md:grid-cols-2 gap-16 items-center">
+                            <div class="overflow-hidden rounded-sm">
+                                <img src="★.jpg" alt="Aurelia Atelier" class="project-image aspect-[4/3] w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Pantai Indah Kapuk 2</h2>
+                                <p class="text-stone-600 mb-8 leading-relaxed font-light">
+                                    A view of Pantai Indah Kapuk 2, North Jakarta
+                                </p>
+                                <div class="flex gap-4 text-xs tracking-wider text-stone-500">
+                                    <span>STRATEGY</span>
+                                    <span>CITY SCENERY</span>
+                                    <span>PHOTOGRAPHY</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="reveal pt-6" style="transition-delay: 0.6s">
-                        <div class="grid grid-cols-3 gap-8 border-t border-stone-200 pt-8">
-                            <div>
-                                <p class="text-3xl font-light mb-2">15+</p>
-                                <p class="text-xs tracking-wider text-stone-500">YEARS EXPERIENCE ON EARTH</p>
+                    <!-- Project 3 -->
+                    <div class="reveal project-card cursor-pointer">
+                        <div class="grid md:grid-cols-2 gap-16 items-center">
+                            <div class="order-2 md:order-1">
+                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Autograph Tower</h2>
+                                <p class="text-stone-600 mb-8 leading-relaxed font-light">
+                                    A view of Autograph Tower.. Kinda similiar with Citadel tower from HL2 heh..
+                                <div class="flex gap-4 text-xs tracking-wider text-stone-500">
+                                    <span>SCENERY</span>
+                                    <span>TOWER</span>
+                                    <span>MOODS</span>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-3xl font-light mb-2">10+</p>
-                                <p class="text-xs tracking-wider text-stone-500">FRIENDS</p>
-                            </div>
-                            <div>
-                                <p class="text-3xl font-light mb-2">5475+</p>
-                                <p class="text-xs tracking-wider text-stone-500">DAYS PASSED</p>
+                            <div class="order-1 md:order-2 overflow-hidden rounded-sm">
+                                <img src="download (13).jpg" alt="Lumina Space" class="project-image aspect-[4/3] w-full h-full object-cover">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    
-    <!-- Contact -->
-    <section id="contact" class="py-32 px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="reveal text-center max-w-3xl mx-auto">
-                <h2 class="text-6xl md:text-8xl mb-12 leading-tight">Let's Create<br/>Something Timeless</h2>
-                <button id="openModal" class="btn-minimal relative px-12 py-5 border border-stone-300 text-sm tracking-widest hover:border-pink-400 transition-colors duration-500">
-                    <span class="relative z-10">GET IN TOUCH</span>
-                </button>
+        </section>
+        
+        <!-- Profile Section -->
+        <section id="about" class="py-32 px-8 bg-stone-50">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-5 gap-16 items-center">
+                    <div class="md:col-span-2 reveal">
+                        <div class="relative profile-photo-container">
+                            <div class="aspect-[3/4] overflow-hidden rounded-sm profile-photo-wrapper">
+                                <img src="agemasen.jpg" alt="Profile Photo" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 profile-photo">
+                            </div>
+                            <div class="absolute -bottom-4 -right-4 w-32 h-32 border border-stone-300 rounded-sm -z-10 profile-border"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-3 space-y-8">
+                        <div class="reveal" style="transition-delay: 0.2s">
+                            <p class="text-sm tracking-widest text-stone-500 mb-6">ABOUT ME</p>
+                            <h2 class="text-5xl md:text-6xl mb-8 leading-tight">Larrei Kebayor<br/>Creativity is Everything</h2>
+                        </div>
+                        
+                        <div class="reveal space-y-6 text-stone-600 leading-relaxed font-light" style="transition-delay: 0.4s">
+                            <p>Hello, Some of you may know me or.. Are you..? Well anyways, I'm Larrei or you can call me as "Rei". I'm living somewhere on Jakarta. I can do some photography, designing (maybe), and coding a little bit</p>
+                            <p>I also likes to play some story pixel games! Because.. Through that, I can learn some lessons or maybe some advices.</p>
+                            <p>2026 Might gonna be my year.. Hope I can get it through with some multiples or different situations..!</p>
+                        </div>
+                        
+                        <div class="reveal pt-6" style="transition-delay: 0.6s">
+                            <div class="grid grid-cols-3 gap-8 border-t border-stone-200 pt-8">
+                                <div>
+                                    <p class="text-3xl font-light mb-2">15+</p>
+                                    <p class="text-xs tracking-wider text-stone-500">YEARS EXPERIENCE ON EARTH</p>
+                                </div>
+                                <div>
+                                    <p class="text-3xl font-light mb-2">10+</p>
+                                    <p class="text-xs tracking-wider text-stone-500">FRIENDS</p>
+                                </div>
+                                <div>
+                                    <p class="text-3xl font-light mb-2">5475+</p>
+                                    <p class="text-xs tracking-wider text-stone-500">DAYS PASSED</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+        
+        <!-- Contact -->
+        <section id="contact" class="py-32 px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="reveal text-center max-w-3xl mx-auto">
+                    <h2 class="text-6xl md:text-8xl mb-12 leading-tight">Let's Create<br/>Something Timeless</h2>
+                    <button id="openModal" class="btn-minimal relative px-12 py-5 border border-stone-300 text-sm tracking-widest hover:border-pink-400 transition-colors duration-500">
+                        <span class="relative z-10">GET IN TOUCH</span>
+                    </button>
+                </div>
+            </div>
+        </section>
 
-    <!-- Comments Button -->
-    <button id="commentsBtn" class="fixed bottom-6 left-6 w-14 h-14 bg-white border border-stone-300 rounded-full flex items-center justify-center cursor-pointer hover:border-pink-400 transition-all duration-300 shadow-lg hover:shadow-xl z-50">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="#1C1917" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-    </button>
+        <!-- Comments Button -->
+        <button id="commentsBtn" class="fixed bottom-6 left-6 w-14 h-14 bg-white border border-stone-300 rounded-full flex items-center justify-center cursor-pointer hover:border-pink-400 transition-all duration-300 shadow-lg hover:shadow-xl z-50">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="#1C1917" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
 
-    <!-- Comments Modal -->
-    <div class="modal-overlay" id="commentsModal">
-        <div class="modal-card" style="max-width: 600px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column;">
-            <button class="modal-close" id="closeComments">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L15 15M15 1L1 15" stroke="#78716C" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Showcase Button -->
+            <button id="showcaseBtn" class="fixed bottom-6 left-24 w-14 h-14 bg-white border border-stone-300 rounded-full flex items-center justify-center cursor-pointer hover:border-cyan-400 transition-all duration-300 shadow-lg hover:shadow-xl z-50">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 16V8C20.9996 7.64927 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64927 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z" stroke="#1C1917" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3.27002 6.96L12 12.01L20.73 6.96" stroke="#1C1917" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 22.08V12" stroke="#1C1917" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
-        
-            <div class="text-center mb-6">
-                <h3 class="text-4xl font-light mb-2" style="font-family: 'Cormorant Garamond', serif;">Comments</h3>
-                <p class="text-stone-500 text-sm">Share your thoughts with everyone</p>
+
+        <!-- Comments Modal -->
+        <div class="modal-overlay" id="commentsModal">
+            <div class="modal-card" style="max-width: 600px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column;">
+                <button class="modal-close" id="closeComments">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L15 15M15 1L1 15" stroke="#78716C" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            
+                <div class="text-center mb-6">
+                    <h3 class="text-4xl font-light mb-2" style="font-family: 'Cormorant Garamond', serif;">Comments</h3>
+                    <p class="text-stone-500 text-sm">Share your thoughts with everyone</p>
+                </div>
+
+                <div id="commentsList" class="flex-1 overflow-y-auto mb-6 space-y-4" style="max-height: 400px;"></div>
+
+                <div class="border-t border-stone-200 pt-6">
+                    <input type="text" id="commenterName" placeholder="Your Name" class="w-full px-4 py-3 border border-stone-300 rounded-lg mb-3 text-sm focus:outline-none focus:border-pink-400 transition-colors">
+                    <textarea id="commentText" placeholder="Write your comment..." class="w-full px-4 py-3 border border-stone-300 rounded-lg mb-3 text-sm resize-none focus:outline-none focus:border-pink-400 transition-colors" rows="3"></textarea>
+                    
+                    <div class="flex items-center gap-3">
+                        <label class="flex-shrink-0 cursor-pointer">
+                            <input type="file" id="commentImage" accept="image/*" class="hidden">
+                            <div class="w-10 h-10 bg-stone-100 rounded-lg flex items-center justify-center hover:bg-pink-50 transition-colors">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 3M12 3L7 8M12 3V15" stroke="#78716C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </label>
+                        <div id="imagePreview" class="flex-1"></div>
+                        <button id="submitComment" class="btn-minimal relative px-6 py-3 bg-stone-900 text-white text-xs tracking-widest hover:bg-pink-500 transition-colors duration-300 rounded-lg">POST</button>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div id="commentsList" class="flex-1 overflow-y-auto mb-6 space-y-4" style="max-height: 400px;"></div>
-
-            <div class="border-t border-stone-200 pt-6">
-                <input type="text" id="commenterName" placeholder="Your Name" class="w-full px-4 py-3 border border-stone-300 rounded-lg mb-3 text-sm focus:outline-none focus:border-pink-400 transition-colors">
-                <textarea id="commentText" placeholder="Write your comment..." class="w-full px-4 py-3 border border-stone-300 rounded-lg mb-3 text-sm resize-none focus:outline-none focus:border-pink-400 transition-colors" rows="3"></textarea>
-                
-                <div class="flex items-center gap-3">
-                    <label class="flex-shrink-0 cursor-pointer">
-                        <input type="file" id="commentImage" accept="image/*" class="hidden">
-                        <div class="w-10 h-10 bg-stone-100 rounded-lg flex items-center justify-center hover:bg-pink-50 transition-colors">
+        <!-- Contact Modal -->
+        <div class="modal-overlay" id="contactModal">
+            <div class="modal-card">
+                <button class="modal-close" id="closeModal">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L15 15M15 1L1 15" stroke="#78716C" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            
+                <div class="text-center mb-8">
+                    <h3 class="text-4xl font-light mb-4" style="font-family: 'Cormorant Garamond', serif;">Get In Touch</h3>
+                    <p class="text-stone-500 text-sm">Feel free to reach out through any of these channels</p>
+                </div>
+            
+                <div class="space-y-4">
+                    <!-- Email -->
+                    <div class="flex items-center gap-4 p-4 border border-stone-200 rounded-lg hover:border-pink-300 transition-colors">
+                        <div class="w-12 h-12 bg-pink-50 rounded-full flex items-center justify-center">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 3M12 3L7 8M12 3V15" stroke="#78716C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3 8L10.89 13.26C11.2187 13.4793 11.6049 13.5963 12 13.5963C12.3951 13.5963 12.7813 13.4793 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z" stroke="#FF6B9D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
-                    </label>
-                    <div id="imagePreview" class="flex-1"></div>
-                    <button id="submitComment" class="btn-minimal relative px-6 py-3 bg-stone-900 text-white text-xs tracking-widest hover:bg-pink-500 transition-colors duration-300 rounded-lg">POST</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Contact Modal -->
-    <div class="modal-overlay" id="contactModal">
-        <div class="modal-card">
-            <button class="modal-close" id="closeModal">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L15 15M15 1L1 15" stroke="#78716C" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </button>
-        
-            <div class="text-center mb-8">
-                <h3 class="text-4xl font-light mb-4" style="font-family: 'Cormorant Garamond', serif;">Get In Touch</h3>
-                <p class="text-stone-500 text-sm">Feel free to reach out through any of these channels</p>
-            </div>
-        
-            <div class="space-y-4">
-                <!-- Email -->
-                <div class="flex items-center gap-4 p-4 border border-stone-200 rounded-lg hover:border-pink-300 transition-colors">
-                    <div class="w-12 h-12 bg-pink-50 rounded-full flex items-center justify-center">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 8L10.89 13.26C11.2187 13.4793 11.6049 13.5963 12 13.5963C12.3951 13.5963 12.7813 13.4793 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z" stroke="#FF6B9D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <div class="flex-1 text-left">
+                            <p class="text-xs text-stone-500 mb-1">Email</p>
+                            <a href="mailto:fedfirifed@gmail.com" class="text-sm text-stone-900 hover:text-pink-500 transition-colors">fedfirifed@gmail.com</a>
+                        </div>
                     </div>
-                    <div class="flex-1 text-left">
-                        <p class="text-xs text-stone-500 mb-1">Email</p>
-                        <a href="mailto:fedfirifed@gmail.com" class="text-sm text-stone-900 hover:text-pink-500 transition-colors">fedfirifed@gmail.com</a>
+                
+                    <!-- Phone -->
+                    <div class="flex items-center gap-4 p-4 border border-stone-200 rounded-lg hover:border-pink-300 transition-colors">
+                        <div class="w-12 h-12 bg-cyan-50 rounded-full flex items-center justify-center">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z" stroke="#4ECDC4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 text-left">
+                            <p class="text-xs text-stone-500 mb-1">Phone</p>
+                            <a href="tel:+6382180005442" class="text-sm text-stone-900 hover:text-cyan-500 transition-colors">+63 821 8000 5442</a>
+                        </div>
                     </div>
-                </div>
-            
-                <!-- Phone -->
-                <div class="flex items-center gap-4 p-4 border border-stone-200 rounded-lg hover:border-pink-300 transition-colors">
-                    <div class="w-12 h-12 bg-cyan-50 rounded-full flex items-center justify-center">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z" stroke="#4ECDC4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                
+                    <!-- Location -->
+                    <div class="flex items-center gap-4 p-4 border border-stone-200 rounded-lg hover:border-pink-300 transition-colors">
+                        <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2Z" stroke="#FEC163" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="12" cy="9" r="2.5" stroke="#FEC163" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 text-left">
+                            <p class="text-xs text-stone-500 mb-1">Location</p>
+                            <p class="text-sm text-stone-900">Jakarta Selatan, West Java, Indonesia</p>
+                        </div>
                     </div>
-                    <div class="flex-1 text-left">
-                        <p class="text-xs text-stone-500 mb-1">Phone</p>
-                        <a href="tel:+6382180005442" class="text-sm text-stone-900 hover:text-cyan-500 transition-colors">+63 821 8000 5442</a>
-                    </div>
-                </div>
-            
-                <!-- Location -->
-                <div class="flex items-center gap-4 p-4 border border-stone-200 rounded-lg hover:border-pink-300 transition-colors">
-                    <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2Z" stroke="#FEC163" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="12" cy="9" r="2.5" stroke="#FEC163" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1 text-left">
-                        <p class="text-xs text-stone-500 mb-1">Location</p>
-                        <p class="text-sm text-stone-900">Jakarta Selatan, West Java, Indonesia</p>
-                    </div>
-                </div>
-            
-                <!-- Social Media -->
-                <div class="flex items-center gap-4 p-4 border border-stone-200 rounded-lg hover:border-pink-300 transition-colors">
-                    <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M16 11.37C16.1234 12.2022 15.9812 13.0522 15.5937 13.799C15.2062 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.9079 12.2384 16.0396 11.4077 15.9059C10.5771 15.7723 9.80971 15.3801 9.21479 14.7852C8.61987 14.1902 8.22768 13.4229 8.09402 12.5922C7.96035 11.7615 8.09202 10.9099 8.47028 10.1584C8.84854 9.40685 9.45414 8.79374 10.2009 8.40624C10.9477 8.01874 11.7977 7.87658 12.63 8C13.4789 8.12588 14.2648 8.52146 14.8716 9.1283C15.4785 9.73515 15.8741 10.5211 16 11.37Z" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M17.5 6.5H17.51" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1 text-left">
-                        <p class="text-xs text-stone-500 mb-1">Social Media</p>
-                        <div class="flex gap-3 text-sm">
-                            <a href="https://instagram.com/dhnaael" target="_blank" class="text-stone-900 hover:text-purple-500 transition-colors">Instagram</a>
-                            <span class="text-stone-300">•</span>
-                            <a href="https://github.com/ryeiiii" target="_blank" class="text-stone-900 hover:text-purple-500 transition-colors">GitHub</a>
+                
+                    <!-- Social Media -->
+                    <div class="flex items-center gap-4 p-4 border border-stone-200 rounded-lg hover:border-pink-300 transition-colors">
+                        <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 11.37C16.1234 12.2022 15.9812 13.0522 15.5937 13.799C15.2062 14.5458 14.5931 15.1514 13.8416 15.5297C13.0901 15.9079 12.2384 16.0396 11.4077 15.9059C10.5771 15.7723 9.80971 15.3801 9.21479 14.7852C8.61987 14.1902 8.22768 13.4229 8.09402 12.5922C7.96035 11.7615 8.09202 10.9099 8.47028 10.1584C8.84854 9.40685 9.45414 8.79374 10.2009 8.40624C10.9477 8.01874 11.7977 7.87658 12.63 8C13.4789 8.12588 14.2648 8.52146 14.8716 9.1283C15.4785 9.73515 15.8741 10.5211 16 11.37Z" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17.5 6.5H17.51" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 text-left">
+                            <p class="text-xs text-stone-500 mb-1">Social Media</p>
+                            <div class="flex gap-3 text-sm">
+                                <a href="https://instagram.com/dhnaael" target="_blank" class="text-stone-900 hover:text-purple-500 transition-colors">Instagram</a>
+                                <span class="text-stone-300">•</span>
+                                <a href="https://github.com/ryeiiii" target="_blank" class="text-stone-900 hover:text-purple-500 transition-colors">GitHub</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Footer -->
-    <footer class="py-12 px-8 border-t border-stone-200">
-        <div class="max-w-7xl mx-auto flex justify-between items-center text-xs tracking-wider text-stone-400">
-            <p>© 2024 PORTFOLIO</p>
-            <div class="flex gap-8">
-                <a href="https://instagram.com/dhnaael" target="_blank" rel="noopener noreferrer" class="underline-effect hover:text-stone-900 transition-colors">INSTAGRAM</a>
-                <a href="https://www.roblox.com/users/846891536/profile" target="_blank" rel="noopener noreferrer" class="underline-effect hover:text-stone-900 transition-colors">ROBLOX</a>
-                <a href="https://github.com/ryeiiii" target="_blank" rel="noopener noreferrer" class="underline-effect hover:text-stone-900 transition-colors">GITHUB</a>
+        
+        <!-- Footer -->
+        <footer class="py-12 px-8 border-t border-stone-200">
+            <div class="max-w-7xl mx-auto flex justify-between items-center text-xs tracking-wider text-stone-400">
+                <p>© 2024 PORTFOLIO</p>
+                <div class="flex gap-8">
+                    <a href="https://instagram.com/dhnaael" target="_blank" rel="noopener noreferrer" class="underline-effect hover:text-stone-900 transition-colors">INSTAGRAM</a>
+                    <a href="https://www.roblox.com/users/846891536/profile" target="_blank" rel="noopener noreferrer" class="underline-effect hover:text-stone-900 transition-colors">ROBLOX</a>
+                    <a href="https://github.com/ryeiiii" target="_blank" rel="noopener noreferrer" class="underline-effect hover:text-stone-900 transition-colors">GITHUB</a>
+                </div>
             </div>
-        </div>
-    </footer>
-    
-    <script>
-        // Initialize animations
-        let mouseX = 0, mouseY = 0;
-        let orbX = 0, orbY = 0;
+        </footer>
         
-        // Smooth cursor trail
-        const trail = document.getElementById('cursorTrail');
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+        <script>
+            // Initialize animations
+            let mouseX = 0, mouseY = 0;
+            let orbX = 0, orbY = 0;
             
-            trail.style.left = mouseX + 'px';
-            trail.style.top = mouseY + 'px';
-            trail.style.opacity = '0.6';
-        });
-        
-        // Orb movement with smooth easing
-        const orbs = [
-            document.getElementById('orb1'),
-            document.getElementById('orb2'),
-            document.getElementById('orb3')
-        ];
-        
-        function animateOrbs() {
-            orbX += (mouseX - orbX) * 0.02;
-            orbY += (mouseY - orbY) * 0.02;
-            
-            orbs.forEach((orb, i) => {
-                const speed = (i + 1) * 0.3;
-                const x = (orbX - window.innerWidth / 2) * speed * 0.05;
-                const y = (orbY - window.innerHeight / 2) * speed * 0.05;
-                orb.style.transform = `translate(${x}px, ${y}px)`;
+            // Smooth cursor trail
+            const trail = document.getElementById('cursorTrail');
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                trail.style.left = mouseX + 'px';
+                trail.style.top = mouseY + 'px';
+                trail.style.opacity = '0.6';
             });
             
-            requestAnimationFrame(animateOrbs);
-        }
-        
-        animateOrbs();
-        
-        // Fade in orbs on load
-        setTimeout(() => {
-            orbs.forEach((orb, i) => {
-                setTimeout(() => {
-                    orb.style.opacity = '1';
-                }, i * 200);
-            });
-        }, 500);
-        
-        // Animate blobs randomly
-        const blobs = document.querySelectorAll('.blob');
-        
-        blobs.forEach((blob, index) => {
-            // Random animation untuk setiap blob
-            setInterval(() => {
-                const randomX = Math.random() * 200 - 100;
-                const randomY = Math.random() * 200 - 100;
-                const randomScale = 0.9 + Math.random() * 0.3;
-                const randomOpacity = 0.05 + Math.random() * 0.08;
+            // Orb movement with smooth easing
+            const orbs = [
+                document.getElementById('orb1'),
+                document.getElementById('orb2'),
+                document.getElementById('orb3')
+            ];
+            
+            function animateOrbs() {
+                orbX += (mouseX - orbX) * 0.02;
+                orbY += (mouseY - orbY) * 0.02;
                 
-                blob.style.transition = 'all 8s cubic-bezier(0.4, 0, 0.2, 1)';
-                blob.style.transform = `translate(${randomX}px, ${randomY}px) scale(${randomScale})`;
-                blob.style.opacity = randomOpacity;
-            }, 8000 + index * 2000);
-        });
-        
-        // Reveal on scroll
-        const reveals = document.querySelectorAll('.reveal');
-        
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, {
-            threshold: 0.15,
-            rootMargin: '0px'
-        });
-        
-        reveals.forEach(reveal => revealObserver.observe(reveal));
-        
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Parallax for project cards
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                orbs.forEach((orb, i) => {
+                    const speed = (i + 1) * 0.3;
+                    const x = (orbX - window.innerWidth / 2) * speed * 0.05;
+                    const y = (orbY - window.innerHeight / 2) * speed * 0.05;
+                    orb.style.transform = `translate(${x}px, ${y}px)`;
+                });
                 
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 50;
-                const rotateY = (centerX - x) / 50;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                requestAnimationFrame(animateOrbs);
+            }
+            
+            animateOrbs();
+            
+            // Fade in orbs on load
+            setTimeout(() => {
+                orbs.forEach((orb, i) => {
+                    setTimeout(() => {
+                        orb.style.opacity = '1';
+                    }, i * 200);
+                });
+            }, 500);
+            
+            // Animate blobs randomly
+            const blobs = document.querySelectorAll('.blob');
+            
+            blobs.forEach((blob, index) => {
+                // Random animation untuk setiap blob
+                setInterval(() => {
+                    const randomX = Math.random() * 200 - 100;
+                    const randomY = Math.random() * 200 - 100;
+                    const randomScale = 0.9 + Math.random() * 0.3;
+                    const randomOpacity = 0.05 + Math.random() * 0.08;
+                    
+                    blob.style.transition = 'all 8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    blob.style.transform = `translate(${randomX}px, ${randomY}px) scale(${randomScale})`;
+                    blob.style.opacity = randomOpacity;
+                }, 8000 + index * 2000);
             });
             
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-            });
-        });
-        
-        // Profile photo 3D tilt effect
-        const profileContainer = document.querySelector('.profile-photo-container');
-        const profileWrapper = document.querySelector('.profile-photo-wrapper');
-        const profileBorder = document.querySelector('.profile-border');
-        const profilePhoto = document.querySelector('.profile-photo');
-        
-        if (profileContainer) {
-            profileContainer.addEventListener('mousemove', (e) => {
-                const rect = profileContainer.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
-                
-                profileWrapper.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-                profileBorder.style.transform = `translate(${rotateY * 0.5}px, ${rotateX * 0.5}px)`;
-                profilePhoto.style.transform = `scale(1.05)`;
+            // Reveal on scroll
+            const reveals = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px'
             });
             
-            profileContainer.addEventListener('mouseleave', () => {
-                profileWrapper.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-                profileBorder.style.transform = 'translate(0, 0)';
-                profilePhoto.style.transform = 'scale(1)';
+            reveals.forEach(reveal => revealObserver.observe(reveal));
+            
+            // Smooth scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
             });
-        }
+            
+            // Parallax for project cards
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 50;
+                    const rotateY = (centerX - x) / 50;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+                });
+            });
+            
+            // Profile photo 3D tilt effect
+            const profileContainer = document.querySelector('.profile-photo-container');
+            const profileWrapper = document.querySelector('.profile-photo-wrapper');
+            const profileBorder = document.querySelector('.profile-border');
+            const profilePhoto = document.querySelector('.profile-photo');
+            
+            if (profileContainer) {
+                profileContainer.addEventListener('mousemove', (e) => {
+                    const rect = profileContainer.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    
+                    profileWrapper.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                    profileBorder.style.transform = `translate(${rotateY * 0.5}px, ${rotateX * 0.5}px)`;
+                    profilePhoto.style.transform = `scale(1.05)`;
+                });
+                
+                profileContainer.addEventListener('mouseleave', () => {
+                    profileWrapper.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                    profileBorder.style.transform = 'translate(0, 0)';
+                    profilePhoto.style.transform = 'scale(1)';
+                });
+            }
 
-        // Contact Modal
-        const modal = document.getElementById('contactModal');
-        const openBtn = document.getElementById('openModal');
-        const closeBtn = document.getElementById('closeModal');
+            // Contact Modal
+            const modal = document.getElementById('contactModal');
+            const openBtn = document.getElementById('openModal');
+            const closeBtn = document.getElementById('closeModal');
 
-        // Comments System
-        const commentsModal = document.getElementById('commentsModal');
-        const commentsBtn = document.getElementById('commentsBtn');
-        const closeComments = document.getElementById('closeComments');
-        const commentsList = document.getElementById('commentsList');
-        const submitComment = document.getElementById('submitComment');
-        const commenterName = document.getElementById('commenterName');
-        const commentText = document.getElementById('commentText');
-        const commentImage = document.getElementById('commentImage');
-        const imagePreview = document.getElementById('imagePreview');
+            // Comments System
+            const commentsModal = document.getElementById('commentsModal');
+            const commentsBtn = document.getElementById('commentsBtn');
+            const closeComments = document.getElementById('closeComments');
+            const commentsList = document.getElementById('commentsList');
+            const submitComment = document.getElementById('submitComment');
+            const commenterName = document.getElementById('commenterName');
+            const commentText = document.getElementById('commentText');
+            const commentImage = document.getElementById('commentImage');
+            const imagePreview = document.getElementById('imagePreview');
 
-        let selectedImageData = null;
+            let selectedImageData = null;
 
-        commentsBtn.addEventListener('click', () => {
-            commentsModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            loadComments();
-        });
+            commentsBtn.addEventListener('click', () => {
+                commentsModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                loadComments();
+            });
 
-        closeComments.addEventListener('click', () => {
-            commentsModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        commentsModal.addEventListener('click', (e) => {
-            if (e.target === commentsModal) {
+            closeComments.addEventListener('click', () => {
                 commentsModal.classList.remove('active');
                 document.body.style.overflow = '';
-            }
-        });
+            });
 
-        commentImage.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    selectedImageData = e.target.result;
-                    imagePreview.innerHTML = `
-                        <div class="relative inline-block">
-                            <img src="${selectedImageData}" class="h-16 rounded-lg object-cover">
-                            <button onclick="clearImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs">×</button>
-                        </div>
-                    `;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+            commentsModal.addEventListener('click', (e) => {
+                if (e.target === commentsModal) {
+                    commentsModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
 
-        window.clearImage = () => {
-            selectedImageData = null;
-            imagePreview.innerHTML = '';
-            commentImage.value = '';
-        };
+            commentImage.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        selectedImageData = e.target.result;
+                        imagePreview.innerHTML = `
+                            <div class="relative inline-block">
+                                <img src="${selectedImageData}" class="h-16 rounded-lg object-cover">
+                                <button onclick="clearImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs">×</button>
+                            </div>
+                        `;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-        submitComment.addEventListener('click', async () => {
-            const name = commenterName.value.trim();
-            const text = commentText.value.trim();
-
-            if (!name || !text) {
-                alert('Please fill in your name and comment');
-                return;
-            }
-
-            const comment = {
-                id: Date.now().toString(),
-                name: name,
-                text: text,
-                image: selectedImageData,
-                timestamp: new Date().toISOString()
+            window.clearImage = () => {
+                selectedImageData = null;
+                imagePreview.innerHTML = '';
+                commentImage.value = '';
             };
 
-            try {
-                await window.storage.set(`comment:${comment.id}`, JSON.stringify(comment), true);
-                commenterName.value = '';
-                commentText.value = '';
-                clearImage();
-                loadComments();
-            } catch (error) {
-                console.error('Error saving comment:', error);
-                alert('Failed to save comment. Please try again.');
-            }
-        });
+            submitComment.addEventListener('click', async () => {
+                const name = commenterName.value.trim();
+                const text = commentText.value.trim();
 
-        async function loadComments() {
-            try {
-                const result = await window.storage.list('comment:', true);
-                
-                if (!result || !result.keys || result.keys.length === 0) {
-                    commentsList.innerHTML = '<p class="text-center text-stone-400 text-sm py-8">No comments yet. Be the first to comment!</p>';
+                if (!name || !text) {
+                    alert('Please fill in your name and comment');
                     return;
                 }
 
-                const comments = [];
-                for (const key of result.keys) {
-                    try {
-                        const data = await window.storage.get(key, true);
-                        if (data && data.value) {
-                            comments.push(JSON.parse(data.value));
-                        }
-                    } catch (error) {
-                        console.error('Error loading comment:', error);
-                    }
+                const comment = {
+                    id: Date.now().toString(),
+                    name: name,
+                    text: text,
+                    image: selectedImageData,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    await window.storage.set(`comment:${comment.id}`, JSON.stringify(comment), true);
+                    commenterName.value = '';
+                    commentText.value = '';
+                    clearImage();
+                    loadComments();
+                } catch (error) {
+                    console.error('Error saving comment:', error);
+                    alert('Failed to save comment. Please try again.');
                 }
+            });
 
-                comments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            async function loadComments() {
+                try {
+                    const result = await window.storage.list('comment:', true);
+                    
+                    if (!result || !result.keys || result.keys.length === 0) {
+                        commentsList.innerHTML = '<p class="text-center text-stone-400 text-sm py-8">No comments yet. Be the first to comment!</p>';
+                        return;
+                    }
 
-                commentsList.innerHTML = comments.map(comment => `
-                    <div class="p-4 border border-stone-200 rounded-lg hover:border-pink-200 transition-colors">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <p class="font-medium text-stone-900">${escapeHtml(comment.name)}</p>
-                                <p class="text-xs text-stone-400">${formatDate(comment.timestamp)}</p>
+                    const comments = [];
+                    for (const key of result.keys) {
+                        try {
+                            const data = await window.storage.get(key, true);
+                            if (data && data.value) {
+                                comments.push(JSON.parse(data.value));
+                            }
+                        } catch (error) {
+                            console.error('Error loading comment:', error);
+                        }
+                    }
+
+                    comments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                    commentsList.innerHTML = comments.map(comment => `
+                        <div class="p-4 border border-stone-200 rounded-lg hover:border-pink-200 transition-colors">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <p class="font-medium text-stone-900">${escapeHtml(comment.name)}</p>
+                                    <p class="text-xs text-stone-400">${formatDate(comment.timestamp)}</p>
+                                </div>
+                                <button onclick="deleteComment('${comment.id}')" class="text-red-400 hover:text-red-600 text-xs px-2 py-1 border border-red-200 rounded hover:border-red-400 transition-colors">Delete</button>
                             </div>
-                            <button onclick="deleteComment('${comment.id}')" class="text-red-400 hover:text-red-600 text-xs px-2 py-1 border border-red-200 rounded hover:border-red-400 transition-colors">Delete</button>
+                            <p class="text-stone-700 text-sm mb-2">${escapeHtml(comment.text)}</p>
+                            ${comment.image ? `<img src="${comment.image}" class="rounded-lg max-h-48 object-cover mt-2">` : ''}
                         </div>
-                        <p class="text-stone-700 text-sm mb-2">${escapeHtml(comment.text)}</p>
-                        ${comment.image ? `<img src="${comment.image}" class="rounded-lg max-h-48 object-cover mt-2">` : ''}
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Error loading comments:', error);
-                commentsList.innerHTML = '<p class="text-center text-stone-400 text-sm py-8">No comments yet. Be the first to comment!</p>';
+                    `).join('');
+                } catch (error) {
+                    console.error('Error loading comments:', error);
+                    commentsList.innerHTML = '<p class="text-center text-stone-400 text-sm py-8">No comments yet. Be the first to comment!</p>';
+                }
             }
-        }
 
-        window.deleteComment = async (id) => {
-            if (!confirm('Are you sure you want to delete this comment?')) return;
-            try {
-                await window.storage.delete(`comment:${id}`, true);
-                loadComments();
-            } catch (error) {
-                console.error('Error deleting comment:', error);
-                alert('Failed to delete comment. Please try again.');
+            window.deleteComment = async (id) => {
+                if (!confirm('Are you sure you want to delete this comment?')) return;
+                try {
+                    await window.storage.delete(`comment:${id}`, true);
+                    loadComments();
+                } catch (error) {
+                    console.error('Error deleting comment:', error);
+                    alert('Failed to delete comment. Please try again.');
+                }
+            };
+
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
             }
-        };
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+            function formatDate(timestamp) {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diff = now - date;
+                const minutes = Math.floor(diff / 60000);
+                const hours = Math.floor(diff / 3600000);
+                const days = Math.floor(diff / 86400000);
 
-        function formatDate(timestamp) {
-            const date = new Date(timestamp);
-            const now = new Date();
-            const diff = now - date;
-            const minutes = Math.floor(diff / 60000);
-            const hours = Math.floor(diff / 3600000);
-            const days = Math.floor(diff / 86400000);
+                if (minutes < 1) return 'Just now';
+                if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+                if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+                if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
 
-            if (minutes < 1) return 'Just now';
-            if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-            if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-            if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
+            openBtn.addEventListener('click', () => {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
 
-        openBtn.addEventListener('click', () => {
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        // Close modal saat klik di luar card
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
+            closeBtn.addEventListener('click', () => {
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
-            }
-        });
+            });
 
-        // Close dengan tombol ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-    </script>
-</body>
-</html>
+            // Close modal saat klik di luar card
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // Close dengan tombol ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // 3D Showcase Navigation
+            const showcaseBtn = document.getElementById('showcaseBtn');
+            showcaseBtn.addEventListener('click', () => {
+                window.location.href = 'showcase.html';
+            });
+        </script>
+    </body>
+    </html>
