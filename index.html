@@ -284,6 +284,27 @@
                 border-color: #FF6B9D;
                 transform: rotate(90deg);
             }
+
+            /* Seconds counter animation */
+            #secondsCounter {
+                transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+            }
+
+            .counter-update {
+                transform: scale(1.08);
+                color: #FF6B9D;
+                text-shadow: 0 0 12px rgba(255,107,157,0.4);
+            }
+
+            .counter-glow {
+                animation: counterPulse 1s ease;
+            }
+
+            @keyframes counterPulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.12); }
+                100% { transform: scale(1); }
+            }
         </style>
     </head>
     <body>
@@ -344,18 +365,18 @@
                     <div class="reveal project-card cursor-pointer">
                         <div class="grid md:grid-cols-2 gap-16 items-center">
                             <div class="order-2 md:order-1">
-                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Stasiun BNI City</h2>
+                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Photography (I guess)</h2>
                                 <p class="text-stone-600 mb-8 leading-relaxed font-light">
-                                    A view of Stasiun BNI City, Central Jakarta
+                                    A view of Autograph Tower, The tallest building in Indonesia located at Jakarta
                                 </p>
                                 <div class="flex gap-4 text-xs tracking-wider text-stone-500">
-                                    <span>ANGLES</span>
-                                    <span>PHOTOGRAPHY</span>
-                                    <span>AFTERNOON</span>
+                                    <span>Thriller</span>
+                                    <span>Photograph</span>
+                                    <span>Half-Life2</span>
                                 </div>
                             </div>
                             <div class="order-1 md:order-2 overflow-hidden rounded-sm">
-                                <img src="download (20).jpg" alt="Zenith Studio" class="project-image aspect-[4/3] w-full h-full object-cover">
+                                <img src="DSCF3299.JPG" alt="Zenith Studio" class="project-image aspect-[4/3] w-full h-full object-cover">
                             </div>
                         </div>
                     </div>
@@ -364,17 +385,17 @@
                     <div class="reveal project-card cursor-pointer">
                         <div class="grid md:grid-cols-2 gap-16 items-center">
                             <div class="overflow-hidden rounded-sm">
-                                <img src="★.jpg" alt="Aurelia Atelier" class="project-image aspect-[4/3] w-full h-full object-cover">
+                                <img src="DSCF3463.JPG" alt="Aurelia Atelier" class="project-image aspect-[4/3] w-full h-full object-cover">
                             </div>
                             <div>
-                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Pantai Indah Kapuk 2</h2>
+                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Another Photography</h2>
                                 <p class="text-stone-600 mb-8 leading-relaxed font-light">
-                                    A view of Pantai Indah Kapuk 2, North Jakarta
+                                    Idk what is this called..
                                 </p>
                                 <div class="flex gap-4 text-xs tracking-wider text-stone-500">
-                                    <span>STRATEGY</span>
-                                    <span>CITY SCENERY</span>
-                                    <span>PHOTOGRAPHY</span>
+                                    <span>Business</span>
+                                    <span>City</span>
+                                    <span>Urban</span>
                                 </div>
                             </div>
                         </div>
@@ -384,17 +405,17 @@
                     <div class="reveal project-card cursor-pointer">
                         <div class="grid md:grid-cols-2 gap-16 items-center">
                             <div class="order-2 md:order-1">
-                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Autograph Tower</h2>
+                                <h2 class="text-5xl md:text-6xl mb-6 leading-tight">Coding</h2>
                                 <p class="text-stone-600 mb-8 leading-relaxed font-light">
-                                    A view of Autograph Tower.. Kinda similiar with Citadel tower from HL2 heh..
+                                    Currently.. Still working and learning on Java and Python
                                 <div class="flex gap-4 text-xs tracking-wider text-stone-500">
-                                    <span>SCENERY</span>
-                                    <span>TOWER</span>
-                                    <span>MOODS</span>
+                                    <span>Codes</span>
+                                    <span>Technology</span>
+                                    <span>World</span>
                                 </div>
                             </div>
                             <div class="order-1 md:order-2 overflow-hidden rounded-sm">
-                                <img src="download (13).jpg" alt="Lumina Space" class="project-image aspect-[4/3] w-full h-full object-cover">
+                                <img src="3d screenshot.png" alt="Lumina Space" class="project-image aspect-[4/3] w-full h-full object-cover">
                             </div>
                         </div>
                     </div>
@@ -409,7 +430,7 @@
                     <div class="md:col-span-2 reveal">
                         <div class="relative profile-photo-container">
                             <div class="aspect-[3/4] overflow-hidden rounded-sm profile-photo-wrapper">
-                                <img src="agemasen.jpg" alt="Profile Photo" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 profile-photo">
+                                <img src="download (20).jpg" alt="Profile Photo" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 profile-photo">
                             </div>
                             <div class="absolute -bottom-4 -right-4 w-32 h-32 border border-stone-300 rounded-sm -z-10 profile-border"></div>
                         </div>
@@ -418,13 +439,13 @@
                     <div class="md:col-span-3 space-y-8">
                         <div class="reveal" style="transition-delay: 0.2s">
                             <p class="text-sm tracking-widest text-stone-500 mb-6">ABOUT ME</p>
-                            <h2 class="text-5xl md:text-6xl mb-8 leading-tight">Larrei Kebayor<br/>Creativity is Everything</h2>
+                            <h2 class="text-5xl md:text-6xl mb-8 leading-tight">Rafar Alfarizqi<br/>Creativity is Everything</h2>
                         </div>
                         
                         <div class="reveal space-y-6 text-stone-600 leading-relaxed font-light" style="transition-delay: 0.4s">
-                            <p>Hello, Some of you may know me or.. Are you..? Well anyways, I'm Larrei or you can call me as "Rei". I'm living somewhere on Jakarta. I can do some photography, designing (maybe), and coding a little bit</p>
+                            <p>Hello, Some of you may know me or.. Are you..? Well anyways, I'm Rafar or you can call me as "Rafar". I'm living somewhere in Indonesia. I can do some photography, designing (maybe), and coding a little bit</p>
                             <p>I also likes to play some story pixel games! Because.. Through that, I can learn some lessons or maybe some advices.</p>
-                            <p>2026 Might gonna be my year.. Hope I can get it through with some multiples or different situations..!</p>
+                            <p>Dunno what to add more..</p>
                         </div>
                         
                         <div class="reveal pt-6" style="transition-delay: 0.6s">
@@ -434,12 +455,12 @@
                                     <p class="text-xs tracking-wider text-stone-500">YEARS EXPERIENCE ON EARTH</p>
                                 </div>
                                 <div>
-                                    <p class="text-3xl font-light mb-2">10+</p>
+                                    <p class="text-3xl font-light mb-2">8+</p>
                                     <p class="text-xs tracking-wider text-stone-500">FRIENDS</p>
                                 </div>
                                 <div>
-                                    <p class="text-3xl font-light mb-2">5475+</p>
-                                    <p class="text-xs tracking-wider text-stone-500">DAYS PASSED</p>
+                                    <p id="secondsCounter" class="text-3xl font-light mb-2">0</p>
+                                    <p class="text-xs tracking-wider text-stone-500">SECONDS PASSED</p>
                                 </div>
                             </div>
                         </div>
@@ -592,7 +613,7 @@
         <!-- Footer -->
         <footer class="py-12 px-8 border-t border-stone-200">
             <div class="max-w-7xl mx-auto flex justify-between items-center text-xs tracking-wider text-stone-400">
-                <p>© 2024 PORTFOLIO</p>
+                <p>© 2026 PORTFOLIO</p>
                 <div class="flex gap-8">
                     <a href="https://instagram.com/dhnaael" target="_blank" rel="noopener noreferrer" class="underline-effect hover:text-stone-900 transition-colors">INSTAGRAM</a>
                     <a href="https://www.roblox.com/users/846891536/profile" target="_blank" rel="noopener noreferrer" class="underline-effect hover:text-stone-900 transition-colors">ROBLOX</a>
@@ -940,6 +961,45 @@
             showcaseBtn.addEventListener('click', () => {
                 window.location.href = 'showcase.html';
             });
+
+            // ===== REALTIME SECONDS FROM 23 FEB 2010 =====
+            const startDate = new Date("2010-02-23T00:00:00");
+            const counter = document.getElementById("secondsCounter");
+            let displayed = 0;
+            function animateValue(start, end, duration) {
+                const startTime = performance.now();
+                function update(currentTime) {
+                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                    const value = Math.floor(start + (end - start) * progress);
+                    counter.textContent = value.toLocaleString() + "+";
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                }
+                requestAnimationFrame(update);
+            }
+
+            function updateSeconds() {
+                const now = new Date();
+                const realSeconds = Math.floor((now - startDate) / 1000);
+                animateValue(displayed, realSeconds, 600);
+                displayed = realSeconds;
+
+                // animation pulse
+                counter.classList.add("counter-update");
+                counter.classList.add("counter-glow");
+                setTimeout(() => {
+                    counter.classList.remove("counter-update");
+                    counter.classList.remove("counter-glow");
+                }, 600);
+            }
+
+            // first load dramatic count
+            const initial = Math.floor((new Date() - startDate) / 1000);
+            animateValue(0, initial, 2000);
+            displayed = initial;
+            // realtime update every second
+            setInterval(updateSeconds, 1000);
         </script>
     </body>
     </html>
